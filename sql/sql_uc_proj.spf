@@ -45,6 +45,8 @@
 		<dict>
 			<key>connectionEncoding</key>
 			<string>utf8</string>
+			<key>contentFilter</key>
+			<dict/>
 			<key>contentPageNumber</key>
 			<integer>1</integer>
 			<key>contentSelection</key>
@@ -68,7 +70,7 @@
 			<key>contentSortColIsAsc</key>
 			<true/>
 			<key>contentViewport</key>
-			<string>{{0, 0}, {694, 450}}</string>
+			<string>{{0, 0}, {1339, 755}}</string>
 			<key>isToolbarVisible</key>
 			<true/>
 			<key>queries</key>
@@ -77,9 +79,12 @@
 	`company` varchar(20) CHARACTER SET utf8 NOT NULL,
 	`name` varchar(100) CHARACTER SET utf8 not null,
 	`price` bigint(255) unsigned not null,
+	`thumbnail` varchar(255) default null,
 	`dealer_id` bigint(255) not null,
 	primary key(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+alter table `car` add column `thumbnail` varchar(255) default null after `price`;
 
 create table `car_history` (
 	`id` bigint(255) not null auto_increment,
@@ -151,6 +156,7 @@ create table `car_option`(
 	<array/>
 	<key>queryHistory</key>
 	<array>
+		<string>alter table `car` add column `thumbnail` varchar(255) default null after `price`</string>
 		<string>create table `car_option`(
 	`id` bigint(255) not null auto_increment,
 	`car_id` bigint(255) not null,
@@ -249,22 +255,6 @@ create table `car_option`(
 	constraint gender_coach check(`coach_gender` in('M', 'F')),
 	constraint method check(`method` in('phone', 'kakao'))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8</string>
-		<string>create table if not exists user_applicant(
-	`id` bigint not null auto_increment,
-	`name` varchar(40) character set utf8 not null,
-	`gender` char(1) not null,
-	`age` int(3) unsigned not null,
-	`tel` varchar(20) not null,
-	`method` varchar(20) not null,
-	`address` varchar(100) character set utf8 not null,
-	`effect` varchar(255) character set utf8 not null,
-	`coach_gender` char(1) not null,
-	`comment` varchar(255) character set utf8 default null,
-	primary key (`id`),
-	constraint gender check(`gender` in('M', 'F')),
-	constraint gender_coach check(`coach_gender` in('M', 'F')),
-	constraint method check(`method` in('phone', 'kakao'))
-) ENGINE=Inni=oDB DEFAULT CHARSET=utf8</string>
 	</array>
 	<key>rdbms_type</key>
 	<string>mysql</string>
