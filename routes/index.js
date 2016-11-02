@@ -6,7 +6,6 @@ var connection = mysql_dbc.init();
 mysql_dbc.test_open(connection);
 
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'UC_proj' });
 });
