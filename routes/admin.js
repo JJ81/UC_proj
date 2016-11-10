@@ -28,15 +28,16 @@ router.get('/dashboard', function(req, res, next) {
  * 등록한 국산차 리스트
  */
 router.get('/domestic/list', function (req, res) {
-	var stmt = "select c.`id`, c.`company`, c.`name`, c.`price`, c.`thumbnail`, d.`name` as dealer_name " +
+	var stmt = "select c.`id`, c.`company`, c.`name`, c.`price`, c.`thumbnail`, d.`name` as dealer_name, c.`status` " +
 		"from `car` as c " +
 		"left join `dealer` as d " +
-		"on c.dealer_id = d.id;";
+		"on c.dealer_id = d.id order by `id` desc;";
 
 	connection.query(stmt, function (err, rows) {
 		if(err){
 			console.error('[ERR] ' + err);
 		}else{
+			console.info(rows);
 			res.render('admin/domestic_list', {
 				title: '달링카, 국산차 리스트',
 				nav : '국산차 관리',

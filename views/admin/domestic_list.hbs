@@ -8,7 +8,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">국산차 리스트</div>
         <div class="panel-body">
-          <table data-toggle="table">
+          <table class="table">
             <thead>
             <tr>
               <th data-field="id" data-align="center">ID</th>
@@ -16,6 +16,8 @@
               <th data-field="name" data-align="center">Model</th>
               <th data-field="price" data-align="right">Price</th>
               <th data-field="dealer" data-align="center">Dealer</th>
+              <th data-field="status" data-align="center">Status</th>
+              <th data-field="status" data-align="center">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -23,9 +25,11 @@
               <tr>
                 <td>{{id}}</td>
                 <td>{{company}}</td>
-                <td><a href="#">{{name}}</a></td>
+                <td>{{name}}</td>
                 <td>{{price}}</td>
                 <td>{{dealer_name}}</td>
+                <td>{{status}}</td>
+                <td><a href="#" class="btn btn-success">in-active</a></td>
               </tr>
               {{/each}}
             </tbody>
@@ -34,5 +38,4 @@
       </div>
     </div>
   </div><!--/.row-->
-
 </div>	<!--/.main-->
