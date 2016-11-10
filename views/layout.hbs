@@ -2,19 +2,44 @@
 <html>
   <head>
     <!-- meta data -->
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Script-Type" content="text/javascript">
+    <meta http-equiv="Content-Style-Type" content="text/css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- // meta data -->
+
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
     <link rel="stylesheet" href="/stylesheets/bootstrap-table.css" />
     <link rel="stylesheet" href="/stylesheets/bootstrap-theme.css" />
     <link rel='stylesheet' href='/stylesheets/style.css' />
 
     <title>{{title}}</title>
+    <!-- admin과 client를 구분하여 로딩이 될 수 있도록 설정할 것 -->
   </head>
+
   <body>
     {{{body}}}
 
     <script src="/javascripts/jquery-1.11.1.min.js"></script>
     <script src="/javascripts/bootstrap.min.js"></script>
+    <script src="/javascripts/bootstrap-table.js"></script>
     <script src="/javascripts/lumino.glyphs.js"></script>
+    <script src="/javascripts/bootstrap-datepicker.js"></script>
+    <script>
+      !function ($) {
+        $(document).on("click","ul.nav li.parent > a > span.icon", function(){
+          $(this).find('em:first').toggleClass("glyphicon-minus");
+        });
+        $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+      }(window.jQuery);
 
+      $(window).on('resize', function () {
+        if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+      })
+      $(window).on('resize', function () {
+        if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+      })
+    </script>
   </body>
 </html>

@@ -1,6 +1,12 @@
 var express = require('express');
 var router = express.Router();
 require('../commons/helpers');
+require('mysql');
+
+var mysql_dbc = require('../commons/db_conn')();
+var connection = mysql_dbc.init();
+mysql_dbc.test_open(connection);
+
 
 router.get('/login', function(req, res, next) {
 	res.render('admin/login', {
@@ -22,10 +28,22 @@ router.get('/dashboard', function(req, res, next) {
  * 등록한 국산차 리스트
  */
 router.get('/domestic/list', function (req, res) {
-	res.render('admin/domestic_list', {
-		title: '달링카, 국산차 리스트',
-		nav : '국산차 관리'
-	})
+	var stmt = "select c.`id`, c.`company`, c.`name`, c.`price`, c.`thumbnail`, d.`name` as dealer_name " +
+		"from `car` as c " +
+		"left join `dealer` as d " +
+		"on c.dealer_id = d.id;";
+
+	connection.query(stmt, function (err, rows) {
+		if(err){
+			console.error('[ERR] ' + err);
+		}else{
+			res.render('admin/domestic_list', {
+				title: '달링카, 국산차 리스트',
+				nav : '국산차 관리',
+				data: rows
+			});
+		}
+	});
 });
 
 
