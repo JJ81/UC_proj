@@ -3,13 +3,14 @@ var router = express.Router();
 
 router.get('/login', function(req, res, next) {
 	res.render('admin/login', {
-		title: 'UC_proj admin page, login'
+		title: '달링카, 로그인'
 	});
 });
 
 router.get('/dashboard', function(req, res, next) {
 	res.render('admin/index', {
-		title: 'UC_proj admin page'
+		title: '달링카',
+		nav : 'Dashboard'
 	});
 });
 
