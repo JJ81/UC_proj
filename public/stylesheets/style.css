@@ -821,4 +821,7 @@ h1.page-header {
   height: 65px;
   overflow: scroll; }
 
+.table-car-pr td {
+  vertical-align: middle !important; }
+
 /*# sourceMappingURL=style.css.map */

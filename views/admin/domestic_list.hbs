@@ -6,7 +6,10 @@
   <div class="row">
     <div class="col-md-12">
       <div class="panel panel-default">
-        <div class="panel-heading">국산차 리스트</div>
+        <div class="panel-heading">
+          국산차 리스트
+          <a href="#" class="btn btn-success pull-right">국산차등록</a>
+        </div>
         <div class="panel-body">
           <table class="table">
             <thead>
@@ -25,11 +28,11 @@
               <tr>
                 <td>{{id}}</td>
                 <td>{{company}}</td>
-                <td>{{name}}</td>
+                <td><a href="#">{{name}}</a></td>
                 <td>{{price}}</td>
                 <td>{{dealer_name}}</td>
                 <td>{{status}}</td>
-                <td><a href="#" class="btn btn-success">in-active</a></td>
+                <td><a href="#" class="btn btn-default">in-active</a></td>
               </tr>
               {{/each}}
             </tbody>

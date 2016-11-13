@@ -1,4 +1,10 @@
+모바일 뷰
+
+<hr />
+
 {{#each data}}
-  [{{company}}] {{name}} / {{price}}
-  <hr />
+  <img src="{{thumbnail}}" alt="{{name}}" /><br />
+  [{{company}}] {{name}}<br />
+  {{min_price}} ~ {{max_price}}<br />
+  <br />
 {{/each}}

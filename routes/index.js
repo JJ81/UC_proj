@@ -18,7 +18,8 @@ TODO admin login 페이지 -> homefit것을 그대로 연결??
  * client app index page
  */
 router.get('/', function(req, res, next) {
-	connection.query('select * from `car`', function (err, rows) {
+	var stmt = 'select * from `car_pr` where `status`=true;';
+	connection.query(stmt, function (err, rows) {
 		if(err){
 			console.error('[ERR] ' + err);
 		}else{
@@ -29,8 +30,5 @@ router.get('/', function(req, res, next) {
 		}
 	});
 });
-
-
-
 
 module.exports = router;

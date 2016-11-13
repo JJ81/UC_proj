@@ -24,6 +24,63 @@ router.get('/dashboard', function(req, res, next) {
 	});
 });
 
+
+router.get('/pr/list', function (req, res) {
+	var stmt = "select * from `car_pr` order by `status` asc;";
+	connection.query(stmt, function (err, data){
+		if(err){
+			console.info(err);
+		}else{
+			res.render('admin/pr_list', {
+				title : '달링카, 홍보차 관리',
+				nav : '홍보차 관리',
+				data: data
+			});
+		}
+	});
+});
+
+
+router.get('/pr/activate/:id/:status', function (req, res) {
+	var stmt = null;
+	var status = req.params.status;
+	if(status == 0 || status == false){
+		stmt = "update `car_pr` set `status`=true where `id`="+req.params.id+";";
+	}else{
+		stmt = "update `car_pr` set `status`=false where `id`="+req.params.id+";";
+	}
+
+	console.info(stmt);
+
+	connection.query(stmt, function (err, data) {
+		if(err){
+			console.error('[err] ' + err);
+		}else{
+			res.redirect('/admin/pr/list');
+		}
+	});
+});
+
+
+router.post('/pr/create/car', function (req, res) {
+	// todo 이미지를 복사하여 목표한 곳에 복사한다.
+	// dir_name/upload/representatives/에 이미지를 업로드한다.
+
+	// todo 이미지 복사가 완료된 후에 디비에 이미지명을 등록한다.
+	
+	var stmt = "";
+	connection.query(stmt, function (err, data){
+		if(err){
+			console.error('[err] ' + err);
+		}else{
+			res.redirect('/admin/pr/list');
+		}
+	});
+
+});
+
+
+
 /**
  * 등록한 국산차 리스트
  */
