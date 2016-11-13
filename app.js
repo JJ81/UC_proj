@@ -14,6 +14,7 @@ var hbs = require('hbs');
 
 
 var app = express();
+global.appRoot = path.resolve(__dirname);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,6 +25,8 @@ hbs.registerPartials(__dirname + '/views/partials');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
+//app.use(express.json());
+//app.use(express.urlencoded());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));

@@ -8,6 +8,10 @@ var connection = mysql_dbc.init();
 mysql_dbc.test_open(connection);
 
 
+var fs = require('fs');
+var formidable = require('formidable');
+var md5 = require('md5');
+
 router.get('/login', function(req, res, next) {
 	res.render('admin/login', {
 		title: '달링카, 로그인'
@@ -63,19 +67,89 @@ router.get('/pr/activate/:id/:status', function (req, res) {
 
 
 router.post('/pr/create/car', function (req, res) {
-	// todo 이미지를 복사하여 목표한 곳에 복사한다.
-	// dir_name/upload/representatives/에 이미지를 업로드한다.
+	//if(req.body.company == undefined || req.body.name == undefined){
+	//	console.error('값 입력이 올바르게 되지 않았습니다.');
+	//	res.rediect('/admin/pr/list');
+	//}
 
-	// todo 이미지 복사가 완료된 후에 디비에 이미지명을 등록한다.
-	
-	var stmt = "";
-	connection.query(stmt, function (err, data){
-		if(err){
-			console.error('[err] ' + err);
-		}else{
-			res.redirect('/admin/pr/list');
-		}
+	console.info(req.body);
+
+	// var form = new formidable.IncomingForm();
+	var form = new formidable.IncomingForm({
+		encoding: 'utf-8',
+		keepExtensions: true,
+		multiples: true
+		//uploadDir: appRoot + '/public/upload/representatives/' // todo check
+		//type: true
+		//bytesReceived : ''
 	});
+
+	//form.on('fileBegin', function(name, file) {
+	//	console.info(name);
+	//	//file.path = form.uploadDir + "/" + file.name;
+	//});
+	//
+	//form.on('file', function(name, file) {
+	//	console.info(name);
+	//	console.info(file);
+	//});
+	//
+	//form.on('error', function(err) {
+	//	console.info(err);
+	//});
+	//
+	//form.on('aborted', function() {
+	//	console.info('aborted');
+	//});
+	//
+	//
+
+	//
+	//form.on('end', function () {
+	//	console.log('upload done');
+	//});
+
+
+	//form.on('field', function(name, value) {
+	//	console.info(name + '/' + value);
+	//});
+
+
+	// todo  임시 저장소에 보관된 이미지들은 언제 사라지는가??? /var/folders/pp
+
+	var _obj = {
+		filename : null,
+		company : null,
+		name : null
+	};
+
+
+	form.parse(req, function (err, fields, files) {
+		if(err){
+			console.info(err);
+		}
+
+		_obj.company = fields.company;
+		_obj.name = fields.name;
+
+		console.log(files);
+		_obj.filename = md5(files.upload.name + new Date());
+
+		fs.renameSync(files.upload.path, appRoot + '/public/upload/representatives/'+_obj.filename);
+
+		var stmt = "insert into `car_pr` (`company`, `name`, `thumbnail`) values('"+_obj.company+"', '"+_obj.name+"', '"+_obj.filename+"');";
+
+		connection.query(stmt, function (err, data){
+			if(err){
+				console.error('[err] ' + err);
+			}else{
+				res.redirect('/admin/pr/list');
+			}
+		});
+	});
+
+
+
 
 });
 

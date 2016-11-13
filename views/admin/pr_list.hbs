@@ -25,7 +25,7 @@
             <tbody>
             {{#each data}}
               <tr>
-                <td><img src="{{thumbnail}}" alt="{{name}}" width="200" height="100" /></td>
+                <td><img src="/upload/representatives/{{thumbnail}}" alt="{{name}}" width="200" height="100" /></td>
                 <td>{{company}}</td>
                 <td>{{name}}</td>
                 <td>{{min_price}} ~ {{max_price}}</td>
@@ -54,7 +54,7 @@
 <div class="modal fade" id="carModifyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <form action="" method="post">
+      <form action="/admin/pr/create/car" method="post" enctype="multipart/form-data">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -64,15 +64,15 @@
         <div class="modal-body">
           <div class="form-group">
             <label>Company</label>
-            <input class="form-control" placeholder="회사이름을 입력하세요." required autofocus />
+            <input class="form-control" name="company" placeholder="회사이름을 입력하세요." required autofocus />
           </div>
           <div class="form-group">
             <label>Model</label>
-            <input class="form-control" placeholder="차량 모델명을 입력하세요." required />
+            <input class="form-control" name="name" placeholder="차량 모델명을 입력하세요." required />
           </div>
           <div class="form-group">
             <label>Thumbnail</label>
-            <input type="file" name="file" required />
+            <input type="file" name="upload" required multiple="multiple" />
             <p class="help-block">*대표 이미지를 등록하세요. (권장사이즈: ?? 이미지형식: ??)</p>
           </div>
         </div>
