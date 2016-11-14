@@ -12,6 +12,82 @@ var fs = require('fs');
 var formidable = require('formidable');
 var md5 = require('md5');
 
+var bcrypt = require('bcrypt');
+var async = require('async');
+
+// 로그인 설정
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var flash = require('connect-flash');
+
+// 로그인 인증 후 세션에 정보를 저장할 때
+passport.serializeUser(function (user, done) {
+	done(null, user);
+});
+
+// 세션에서 정보를 꺼낼 때
+passport.deserializeUser(function (user, done) {
+	done(null, user);
+});
+
+var isAuthenticated = function (req, res, next) {
+	if (req.isAuthenticated())
+		return next();
+	res.redirect('/admin/login'); // 로그인이 되지 않을 경우 로그인 페이지로 이동시킨다.
+};
+
+passport.use(new LocalStrategy({
+		usernameField: 'email',
+		passwordField: 'password',
+		passReqToCallback: true
+	}, function (req, email, password, done) {
+		var stmt = "select * from `dealer` where `email`='" + email + "'";
+		console.log(stmt);
+
+		connection.query(stmt, function (err, data) {
+			if (err) {
+				return done(null, false);
+			} else {
+				if (data.length === 1) {
+					if (!bcrypt.compareSync(password, data[0].password)){
+						console.log('password is not matched.');
+						return done(null, false);
+					} else {
+						console.log('password is matched.');
+						console.info(data[0]);
+						return done(null, {
+							'name': data[0].name,
+							'email': data[0].email
+						});
+					}
+				} else {
+					return done(null, false);
+				}
+			}
+		});
+	}
+));
+
+router.get('/login', function (req, res) {
+	if (req.user == null) {
+		res.render('admin/login', {
+			title: '달링카, 로그인',
+			part: 'login',
+			loggedIn : req.user
+		});
+	} else {
+		res.redirect('/admin/dashboard');
+	}
+});
+
+router.post('/login',
+	passport.authenticate('local', {
+		failureRedirect: '/admin/login',
+		failureFlash: true
+	}), function (req, res) {
+		res.redirect('/admin/dashboard');
+	});
+
 router.get('/login', function(req, res, next) {
 	res.render('admin/login', {
 		title: '달링카, 로그인'
@@ -19,12 +95,65 @@ router.get('/login', function(req, res, next) {
 });
 
 /**
+ * 로그아웃
+ */
+router.get('/logout', isAuthenticated, function (req, res) {
+	req.logout();
+	res.redirect('/');
+});
+
+
+/**
+ * 딜러 생성 페이지 (관리자 포함)
+ */
+router.get('/create/dealer', function (req, res) {
+	var stmt = "select * from `dealer`";
+	connection.query(stmt, function (err, data) {
+		if(err){
+			console.error(err);
+		}else{
+			res.render('admin/create_dealer', {
+				title : '달링카, 딜러 생성',
+				data : data
+			});
+		}
+	});
+});
+
+router.post('/result/dealer', function (req, res) {
+	// TODO 기존 데이터와 중복 검사를 해야 한다.??
+
+
+	var _obj = {
+		name : req.body.name.trim(),
+		tel : req.body.tel.trim(),
+		email : req.body.email.trim(),
+		password: req.body.password.trim()
+	};
+
+	var hash = bcrypt.hashSync(_obj.password, 10);
+	var stmt = "insert into `dealer` (`name`, `tel`, `email`, `password`)" +
+		"values('"+_obj.name+"','"+_obj.tel+"','"+_obj.email+"','"+hash+"');";
+
+	connection.query(stmt, function (err, data) {
+		if(err){
+			console.error(err);
+		}else{
+			console.info(data);
+		}
+		res.redirect('/admin/create/dealer');
+	});
+});
+
+
+/**
  * 데이터 내용 미정
  */
-router.get('/dashboard', function(req, res, next) {
+router.get('/dashboard', isAuthenticated, function(req, res, next) {
 	res.render('admin/index', {
 		title: '달링카',
-		nav : 'Dashboard'
+		nav : 'Dashboard',
+		loggedIn: req.user
 	});
 });
 

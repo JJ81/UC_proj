@@ -16,10 +16,24 @@ var hbs = require('hbs');
 var app = express();
 global.appRoot = path.resolve(__dirname);
 
+var passport = require('passport');
+var flash = require('connect-flash');
+var cookieSession = require('cookie-session');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 hbs.registerPartials(__dirname + '/views/partials');
+
+// 쿠키 세션이 없으면 passport가 세션에 저장을 할 수 없다.
+app.use(cookieSession({
+	keys: ['ucprojectadmin']
+}));
+
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

@@ -1,10 +1,11 @@
-모바일 뷰
-
-<hr />
-
+<article class="m_container">
 {{#each data}}
-  <img src="{{thumbnail}}" alt="{{name}}" /><br />
-  [{{company}}] {{name}}<br />
-  {{min_price}} ~ {{max_price}}<br />
+  <a href="#">
+    <img src="/upload/representatives/{{thumbnail}}" alt="{{name}}" /><br />
+    [{{company}}] {{name}}<br />
+    {{min_price}} ~ {{max_price}}원<br />
+  </a>
+
   <br />
 {{/each}}
+</article>
