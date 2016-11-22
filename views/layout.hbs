@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- 메타 정보 mobile client와 admin 구분하기 -->
     <!-- meta data -->
     <meta charset="utf-8">
     <meta http-equiv="Content-Script-Type" content="text/javascript">
     <meta http-equiv="Content-Style-Type" content="text/css">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <!-- todo open graph용 데이터 -->
 
     <!-- // meta data -->
 
+    {{#if (isEquals part 'mobile')}}
+    <link rel='stylesheet' href='/stylesheets/m_style.css' />
+    {{else}}
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
     <!--<link rel="stylesheet" href="/stylesheets/bootstrap-table.css" />-->
     <link rel="stylesheet" href="/stylesheets/bootstrap-theme.css" />
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    {{/if}}
+
 
     <title>{{title}}</title>
     <!-- admin과 client를 구분하여 로딩이 될 수 있도록 설정할 것 -->
