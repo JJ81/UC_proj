@@ -99,22 +99,23 @@ router.get('/login', function(req, res, next) {
  */
 router.get('/logout', isAuthenticated, function (req, res) {
 	req.logout();
-	res.redirect('/');
+	res.redirect('/admin/login');
 });
-
 
 /**
  * 딜러 생성 페이지 (관리자 포함)
  */
-router.get('/create/dealer', function (req, res) {
+router.get('/dealer/list', function (req, res) {
 	var stmt = "select * from `dealer`";
 	connection.query(stmt, function (err, data) {
 		if(err){
 			console.error(err);
 		}else{
 			res.render('admin/create_dealer', {
-				title : '달링카, 딜러 생성',
-				data : data
+				title: '달링카, 딜러 리스트',
+				nav : '딜러 관리',
+				data : data,
+				loggedIn: req.user
 			});
 		}
 	});
@@ -141,7 +142,7 @@ router.post('/result/dealer', function (req, res) {
 		}else{
 			console.info(data);
 		}
-		res.redirect('/admin/create/dealer');
+		res.redirect('/admin/dealer/list');
 	});
 });
 
@@ -157,116 +158,125 @@ router.get('/dashboard', isAuthenticated, function(req, res, next) {
 	});
 });
 
-
+/**
+ * 홍보차 등록 리스트
+ */
 router.get('/pr/list', function (req, res) {
-	var stmt = "select * from `car_pr` order by `status` asc;";
+	/*
+		todo 회사 정보 내려주기, 차종 리스트 내려주기,
+		todo 수정하기 기능 중 기존 데이터 지우고 이미지 파일 지우기
+		todo
+	 */
+	var stmt = "select " +
+	"cp.id, c.name as `company`, cp.company_id, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail, cp.status, ct.id as `type_id`" +
+	"from `car_pr` as cp " +
+	"left join `company` as c " +
+	"on cp.company_id = c.id " +
+	"left join `car_type` as ct " +
+	"on cp.type_id = ct.id " +
+	// "where cp.status = true " +
+	"order by cp.id asc;";
+	var stmt_company = "select * from `company` order by `id` asc;";
+	var stmt_type = "select * from `car_type` order by `id` asc;";
 	connection.query(stmt, function (err, data){
 		if(err){
 			console.info(err);
 		}else{
-			res.render('admin/pr_list', {
-				title : '달링카, 홍보차 관리',
-				nav : '홍보차 관리',
-				data: data
+			connection.query(stmt_company, function (err, com) {
+				if(err){
+					console.error(err);
+				}else{
+					connection.query(stmt_type, function (err, type) {
+						if(err){
+							console.error(err);
+						}else{
+							res.render('admin/pr_list', {
+								title : '달링카, 홍보차 관리',
+								nav : '홍보차 관리',
+								data: data,
+								com: com,
+								type: type,
+								loggedIn: req.user
+							});
+						}
+					});
+				}
 			});
 		}
 	});
 });
 
 
-router.get('/pr/activate/:id/:status', function (req, res) {
-	var stmt = null;
+router.get('/pr/activate/:id/:status/:company_id', function (req, res) {
+	var id = req.params.id;
 	var status = req.params.status;
+	var company_id = req.params.company_id;
+
+	var stmt = null;
+
 	if(status == 0 || status == false){
-		stmt = "update `car_pr` set `status`=true where `id`="+req.params.id+";";
+		stmt = "update `car_pr` set `status`=true where `id`="+id+";";
 	}else{
-		stmt = "update `car_pr` set `status`=false where `id`="+req.params.id+";";
+		stmt = "update `car_pr` set `status`=false where `id`="+id+";";
 	}
 
-	console.info(stmt);
+	// 활성화를 한 번 한 제조사는 계속 열려 있게 된다
+	var stmt_com = "update `company` set `active`=true where `id`='"+company_id+"';";
 
 	connection.query(stmt, function (err, data) {
 		if(err){
 			console.error('[err] ' + err);
 		}else{
-			res.redirect('/admin/pr/list');
+			connection.query(stmt_com, function (err, com) {
+				if(err){
+					console.error(err);
+				}else{
+					res.redirect('/admin/pr/list');
+				}
+			});
 		}
 	});
 });
 
-
+/**
+ *  새로운 홍보차 등록
+ */
 router.post('/pr/create/car', function (req, res) {
-	//if(req.body.company == undefined || req.body.name == undefined){
-	//	console.error('값 입력이 올바르게 되지 않았습니다.');
-	//	res.rediect('/admin/pr/list');
-	//}
-
 	console.info(req.body);
 
-	// var form = new formidable.IncomingForm();
 	var form = new formidable.IncomingForm({
 		encoding: 'utf-8',
 		keepExtensions: true,
 		multiples: true
-		//uploadDir: appRoot + '/public/upload/representatives/' // todo check
-		//type: true
-		//bytesReceived : ''
 	});
 
-	//form.on('fileBegin', function(name, file) {
-	//	console.info(name);
-	//	//file.path = form.uploadDir + "/" + file.name;
-	//});
-	//
-	//form.on('file', function(name, file) {
-	//	console.info(name);
-	//	console.info(file);
-	//});
-	//
-	//form.on('error', function(err) {
-	//	console.info(err);
-	//});
-	//
-	//form.on('aborted', function() {
-	//	console.info('aborted');
-	//});
-	//
-	//
-
-	//
-	//form.on('end', function () {
-	//	console.log('upload done');
-	//});
-
-
-	//form.on('field', function(name, value) {
-	//	console.info(name + '/' + value);
-	//});
-
-
 	// todo  임시 저장소에 보관된 이미지들은 언제 사라지는가??? /var/folders/pp
-
 	var _obj = {
 		filename : null,
 		company : null,
-		name : null
+		name : null,
+		company_id : null,
+		type_id : null
 	};
-
 
 	form.parse(req, function (err, fields, files) {
 		if(err){
-			console.info(err);
+			console.error(err);
 		}
+		// console.info(fields);
 
 		_obj.company = fields.company;
 		_obj.name = fields.name;
+		_obj.company_id = fields.company;
+		_obj.type_id = fields.type;
 
 		console.log(files);
 		_obj.filename = md5(files.upload.name + new Date());
 
 		fs.renameSync(files.upload.path, appRoot + '/public/upload/representatives/'+_obj.filename);
 
-		var stmt = "insert into `car_pr` (`company`, `name`, `thumbnail`) values('"+_obj.company+"', '"+_obj.name+"', '"+_obj.filename+"');";
+		var stmt = "insert into `car_pr` (`company_id`, `name`, `type_id`, `thumbnail`)" +
+			"values('"+_obj.company_id+"','"+_obj.name+"','"+_obj.type_id+"','"+_obj.filename+"');";
 
 		connection.query(stmt, function (err, data){
 			if(err){
@@ -276,10 +286,34 @@ router.post('/pr/create/car', function (req, res) {
 			}
 		});
 	});
+});
 
 
+router.post('/pr/modify/car', function (req, res) {
 
+	// todo 만약 파일을 업로드했다면 기존 데이터를 조회하여 해당 파일을 이름을 찾아서 지우고 새로 업로드 한다. (이건 나중에)
+	if(req.body.upload !== '') {
+		console.info('파일이 새로 업로드되었습니다.');
+	}
 
+	var _obj = {
+		id: req.body.item_id,
+		name : req.body.name,
+		type_id : req.body.type,
+		company_id : req.body.company,
+		thumbnail : null
+	};
+
+	var stmt =
+		"update `car_pr` set `name`='"+_obj.name+"', `type_id`='"+_obj.type_id+"', `company_id`='"+_obj.company_id+"' where `id`='"+_obj.id+"'";
+
+	connection.query(stmt, function (err, data){
+		if(err){
+			console.error(err);
+		}else{
+			res.redirect('/admin/pr/list');
+		}
+	});
 });
 
 
@@ -301,7 +335,8 @@ router.get('/domestic/list', function (req, res) {
 			res.render('admin/domestic_list', {
 				title: '달링카, 국산차 리스트',
 				nav : '국산차 관리',
-				data: rows
+				data: rows,
+				loggedIn: req.user
 			});
 		}
 	});
@@ -314,7 +349,8 @@ router.get('/domestic/list', function (req, res) {
 router.get('/foreign/list', function (req, res) {
 	res.render('admin/foreign_list', {
 		title: '달링카, 외제차 리스트',
-		nav : '외제차 관리'
+		nav : '외제차 관리',
+		loggedIn: req.user
 	})
 });
 
@@ -322,27 +358,22 @@ router.get('/foreign/list', function (req, res) {
 router.get('/customer/list', function (req, res) {
 	res.render('admin/customer_list', {
 		title: '달링카, 고객 리스트',
-		nav : '고객 관리'
+		nav : '고객 관리',
+		loggedIn: req.user
 	})
 });
 
 
-router.get('/dealer/list', function (req, res) {
-	res.render('admin/dealer_list', {
-		title: '달링카, 딜러 리스트',
-		nav : '딜러 관리'
-	})
-});
+
 
 
 router.get('/manage', function (req, res) {
 	res.render('admin/manage', {
 		title: '달링카, 관리자',
-		nav : '관리자'
+		nav : '관리자',
+		loggedIn: req.user
 	})
 });
-
-
 
 
 module.exports = router;

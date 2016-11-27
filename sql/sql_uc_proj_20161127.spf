@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ContentFilters</key>
+	<dict/>
+	<key>auto_connect</key>
+	<true/>
+	<key>data</key>
+	<dict>
+		<key>connection</key>
+		<dict>
+			<key>colorIndex</key>
+			<integer>0</integer>
+			<key>database</key>
+			<string>uc_proj</string>
+			<key>host</key>
+			<string>127.0.0.1</string>
+			<key>kcid</key>
+			<string>-7160359756898652547</string>
+			<key>name</key>
+			<string>uc_proj</string>
+			<key>rdbms_type</key>
+			<string>mysql</string>
+			<key>sslCACertFileLocation</key>
+			<string></string>
+			<key>sslCACertFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslCertificateFileLocation</key>
+			<string></string>
+			<key>sslCertificateFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslKeyFileLocation</key>
+			<string></string>
+			<key>sslKeyFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>type</key>
+			<string>SPTCPIPConnection</string>
+			<key>useSSL</key>
+			<integer>0</integer>
+			<key>user</key>
+			<string>root</string>
+		</dict>
+		<key>session</key>
+		<dict>
+			<key>connectionEncoding</key>
+			<string>utf8</string>
+			<key>contentFilter</key>
+			<dict/>
+			<key>contentPageNumber</key>
+			<integer>1</integer>
+			<key>contentSelection</key>
+			<data>
+			YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFy
+			Y2hpdmVyVCR0b3ASAAGGoK8QDwcIFRYXGBkfICEoLDA0OFUkbnVs
+			bNMJCgsMEBRXTlMua2V5c1pOUy5vYmplY3RzViRjbGFzc6MNDg+A
+			AoADgASjERITgAWABoAKgA5UdHlwZVRyb3dzVGtleXNfECZTZWxl
+			Y3Rpb25EZXRhaWxUeXBlUHJpbWFyeUtleWVkRGV0YWlsc9MJCgsa
+			HB6hG4AHoR2ACIAJUTgJ0iIjJCVaJGNsYXNzbmFtZVgkY2xhc3Nl
+			c18QE05TTXV0YWJsZURpY3Rpb25hcnmjJCYnXE5TRGljdGlvbmFy
+			eVhOU09iamVjdNIKCykroSqAC4AN0gstLi9ZTlMuc3RyaW5ngAxS
+			aWTSIiMxMl8QD05TTXV0YWJsZVN0cmluZ6MxMydYTlNTdHJpbmfS
+			IiM1Nl5OU011dGFibGVBcnJheaM1NydXTlNBcnJhedIiIyY5oiYn
+			XxAPTlNLZXllZEFyY2hpdmVy0Tw9VGRhdGGAAQAIABEAGgAjAC0A
+			MgA3AEkATwBWAF4AaQBwAHQAdgB4AHoAfgCAAIIAhACGAIsAkACV
+			AL4AxQDHAMkAywDNAM8A0QDSANcA4gDrAQEBBQESARsBIAEiASQB
+			JgErATUBNwE6AT8BUQFVAV4BYwFyAXYBfgGDAYYBmAGbAaAAAAAA
+			AAACAQAAAAAAAAA+AAAAAAAAAAAAAAAAAAABog==
+			</data>
+			<key>contentSortColIsAsc</key>
+			<true/>
+			<key>contentViewport</key>
+			<string>{{0, 0}, {1043, 1025}}</string>
+			<key>isToolbarVisible</key>
+			<true/>
+			<key>queries</key>
+			<string>create table `car` (
+	`id` bigint(255) not null auto_increment,
+	`company` varchar(20) CHARACTER SET utf8 NOT NULL,
+	`name` varchar(100) CHARACTER SET utf8 not null,
+	`price` bigint(255) unsigned not null,
+	`thumbnail` varchar(255) CHARACTER SET utf8 default null,
+	`dealer_id` bigint(255) not null,
+	primary key(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+alter table `car` add column `thumbnail` varchar(255) default null after `price`;
+
+create table `car_history` (
+	`id` bigint(255) not null auto_increment,
+	`car_id` bigint(255) not null,
+	`accident` boolean default true,
+	`water` boolean default true,
+	`remodel` boolean default true,
+	`repair` boolean default true,
+	primary key(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+create table `car_details`(
+	`id` bigint(255) not null auto_increment,
+	`car_id` bigint(255) not null,
+	`birth` int(4) unsigned not null comment '생산년도',
+	`fuel_type` varchar(10) not null comment '연료타입',
+	`fuel_ratio` int(5) unsigned not null comment '연비',
+	`fuel_grade` tinyint(1) unsigned not null comment '연료등급',
+	`type` varchar(10) not null comment '차종(경차, 소형차, 준중형차, 중형차, 대형차)',
+	`displacement` int(5) unsigned not null comment '배기량',
+	`color` varchar(10) not null,
+	primary key(`id`)
+)engine=InnoDB default charset=utf8;
+
+
+create table `car_option`(
+	`id` bigint(255) not null auto_increment,
+	`car_id` bigint(255) not null,
+	`navi` boolean default true,
+	`blackbox` boolean default true,
+	`sunroof` boolean default true,
+	`as` boolean default true,
+	`rear_sensor` boolean default true,
+	`rear_camera` boolean default true,
+	`heat_seat` boolean default true,
+	`smart_key` boolean default true,
+	primary key(`id`)
+)engine=InnoDB default charset=utf8;
+
+create table `dealer` (
+	`id` bigint(255) not null auto_increment,
+	`name` varchar(10) CHARACTER SET utf8 not null,
+	`password` varchar(255) CHARACTER SET utf8 not null,
+	`tel` varchar(100) CHARACTER SET utf8 not null,
+	primary key(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+select * from `car`;
+insert into `car` (`company`, `name`, `price`, `thumbnail`, `dealer_id`) 
+values ('기아', 'K5 2.0 스마트', 10000000, 'thumbnail_path', 1);
+
+insert into `car` (`company`, `name`, `price`, `thumbnail`, `dealer_id`) 
+values ('기아', 'K3 1.6 GDI 트랜디', 1000000, 'thumbnail_path', 1);
+
+
+
+
+insert into `dealer` (`name`, `password`, `tel`) values('이재준', 'qwer1234', '01033650510');
+
+ALTER TABLE `car` 
+ADD CONSTRAINT FK_car_dealer 
+FOREIGN KEY (`dealer_id`) 
+REFERENCES `dealer`(`id`);
+
+alter table `car_details`
+add constraint FK_car_details
+FOREIGN key (`car_id`)
+references `car`(`id`);
+
+alter table `car_history`
+add constraint FK_car_history
+foreign key (`car_id`)
+references `car`(`id`);
+
+alter table `car_option`
+add constraint FK_car_option
+foreign key(`car_id`)
+references `car`(`id`);
+
+
+
+## 남은 할 일
+# customer table을 생성한다. 차를 팔거나 살 때  양식을 남긴다면 해당 정보를 이곳에 수집한다.
+;
+
+
+
+select c.`id`, c.`company`, c.`name`, c.`price`, c.`thumbnail`, d.`name` as dealer_name, c.`status`
+from `car` as c
+left join `dealer` as d
+on c.dealer_id = d.id
+order by `id` desc;
+
+
+
+
+alter table `car` add column `status` boolean default false after `dealer_id`;
+
+alter table `car` add column `hit_count` bigint default 0 after `status`;
+
+
+
+drop table `car_pr`;
+# car_pr 홍보를 위한 차 리스트는 첫 뎁스에 노출된 그룹이다.
+create table `car_pr`(
+	`id` bigint(255) not null auto_increment, # group_id이다. 
+	`company` varchar(20) CHARACTER SET utf8 NOT NULL,
+	`name` varchar(100) CHARACTER SET utf8 not null,
+	`max_price` bigint(255) unsigned default 0,
+	`min_price` bigint(255) unsigned default 0,
+	`thumbnail` varchar(255) CHARACTER SET utf8 default null,
+	`status` boolean default false,
+	primary key(`id`)
+)engine=InnoDB default charset=utf8;
+
+
+alter table `car` drop column `ref_id`;
+alter table `car` add column `ref_id` bigint default null after `hit_count`;
+
+alter table `car`
+add constraint FK_car_to_pr
+foreign key(`ref_id`)
+references `car_pr`(`id`);
+
+insert intdo `car_pr` (`id`, `company`, `name`) 
+values(1, '현대','아반떼');
+
+insert into `car_pr` (`company`, `name`) 
+values('현대','아반떼');
+
+insert into `car_pr` (`company`, `name`) 
+values('기아','K3');
+
+insert into `car_pr` (`company`, `name`) 
+values('기아','K5');
+
+insert into `car_pr` (`company`, `name`, `thumbnail`) 
+values('현대','제네시스', 'test');
+
+
+# car_pr에서 차의 노출 순서를 무엇으로 결정할 수 있는가??
+
+
+select * from `car_pr`;
+
+
+delete from `car_pr` where `id`=1;
+
+update `car_pr` set `status`=true where `id`=1;
+
+
+# admin이 따로 있어야 하나??
+alter table `dealer` add column email varchar(100) CHARACTER SET utf8 default null after `tel`;
+alter table `dealer` add constraint unique key(`email`);
+
+
+select * from `dealer` where `email`='j.lee@intertoday.com';
+
+
+
+#ALTER TABLE `car_pr` AUTO_INCREMENT = 1;
+
+alter table `car_pr` drop column `size`;
+alter table `car_pr` add column `size` varchar(10) CHARACTER SET utf8 not null after `min_price`;
+alter table `car_pr` add column `hit_count` bigint default 0 after `size`;
+
+create table `company`(
+	`id` bigint not null auto_increment,
+	`name` varchar(20) CHARACTER SET utf8 NOT NULL,
+	primary key(`id`)
+)engine=InnoDB default charset=utf8;
+
+alter table `company` add column `oversee` boolean default false;
+
+
+select * from `company` where `oversee` is false;
+
+create table `car_type`(
+	`id` bigint not null auto_increment,
+	`type` varchar(20) CHARACTER SET utf8 NOT NULL,
+	primary key(`id`)
+)engine=InnoDB default charset=utf8;
+
+alter table `car_pr` drop column `size`;
+
+# car_pr에 등록할 때 company와 car_type을 참조키로 연결시킨다.
+
+alter table `company` add column `active` boolean default false;
+
+alter table `car_pr` drop column `company`;
+alter table `car_pr` drop column `company_id`;
+alter table `car_pr` add column `company_id` bigint default 69 after `id`;
+
+alter table `car_pr` add column `type_id` bigint default 13 after `name`;
+
+alter table `car_pr` 
+add constraint `FK_prcar_company`
+foreign key(`company_id`)
+references `company`(`id`);
+
+alter table `car_pr`
+add constraint `FK_prcar_type`
+foreign key(`type_id`)
+references `car_type`(`id`);
+
+
+
+# type_id, company_id를 통해서 데이터 가져오기
+select 
+c.name as `company`, ct.type, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail 
+from `car_pr` as cp
+left join `company` as c
+on cp.company_id = c.id
+left join `car_type` as ct
+on cp.type_id = ct.id;
+
+
+
+
+select count(*) from `car_pr`;
+
+select 
+c.name as `company`, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail 
+from `car_pr` as cp
+left join `company` as c
+on cp.company_id = c.id
+where cp.status = true
+order by cp.id asc;
+
+
+select * from `company` order by `id` asc;
+select * from `car_type` order by `id` asc;
+
+select * from `car_pr`;
+
+
+
+
+
+
+
+</string>
+			<key>table</key>
+			<string>company</string>
+			<key>view</key>
+			<string>SP_VIEW_CUSTOMQUERY</string>
+			<key>windowVerticalDividerPosition</key>
+			<real>199</real>
+		</dict>
+	</dict>
+	<key>encrypted</key>
+	<false/>
+	<key>format</key>
+	<string>connection</string>
+	<key>queryFavorites</key>
+	<array/>
+	<key>queryHistory</key>
+	<array>
+		<string>select * from `car_pr`</string>
+		<string>select * from `company` order by `id` asc</string>
+		<string>select * from `car_type` order by `id` asc</string>
+		<string>select * from `company`</string>
+		<string>select 
+c.name as `company`, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail 
+from `car_pr` as cp
+left join `company` as c
+on cp.company_id = c.id
+where cp.status = true
+order by cp.id asc</string>
+		<string>select 
+c.name as `company`, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail 
+from `car_pr` as cp
+left join `company` as c
+on cp.company_id = c.id
+where cp.status = true
+order by cp.id</string>
+		<string>select 
+c.name as `company`, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail 
+from `car_pr` as cp
+left join `company` as c
+on cp.company_id = c.id
+order by cp.id</string>
+		<string>select 
+c.name as `company`, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail 
+from `car_pr` as cp
+left join `company` as c
+on cp.company_id = c.id</string>
+		<string># type_id, company_id를 통해서 데이터 가져오기
+select 
+c.name as `company`, ct.type, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail 
+from `car_pr` as cp
+left join `company` as c
+on cp.company_id = c.id
+left join `car_type` as ct
+on cp.type_id = ct.id</string>
+		<string>select count(*) from `car_pr`</string>
+		<string># type_id, company_id를 통해서 데이터 가져오기
+select 
+c.name as `company`, ct.type , cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail 
+from `car_pr` as cp
+left join `company` as c
+on cp.company_id = c.id
+left join `car_type` as ct
+on cp.type_id = ct.id</string>
+		<string># type_id, company_id를 통해서 데이터 가져오기
+select 
+c.name as `company`, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail, ct.type 
+from `car_pr` as cp
+left join `company` as c
+on cp.company_id = c.id
+left join `car_type` as ct
+on cp.type_id = ct.id</string>
+		<string># type_id, company_id를 통해서 데이터 가져오기
+select 
+c.name as `company`, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail 
+from `car_pr` as cp
+left join `company` as c
+on cp.company_id = c.id</string>
+		<string># type_id, company_id를 통해서 데이터 가져오기
+select 
+cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail, c.name as `type`
+from `car_pr` as cp
+left join `company` as c
+on cp.company_id = c.id</string>
+		<string># type_id, company_id를 통해서 데이터 가져오기
+select * from `car_pr` as cp
+left join `company` as c
+on cp.company_id = c.id</string>
+		<string>alter table `car_pr`
+add constraint `FK_prcar_type`
+foreign key(`type_id`)
+references `car_type`(`id`)</string>
+		<string>alter table `car_pr` add column `type_id` bigint default 13 after `name`</string>
+		<string>alter table `car_pr` drop column `company`</string>
+		<string>alter table `car_pr` 
+add constraint `FK_prcar_company`
+foreign key(`company_id`)
+references `company`(`id`)</string>
+		<string>alter table `car_pr` add column `company_id` bigint default 69 after `id`</string>
+	</array>
+	<key>rdbms_type</key>
+	<string>mysql</string>
+	<key>rdbms_version</key>
+	<string>5.5.5-10.1.13-MariaDB</string>
+	<key>version</key>
+	<integer>1</integer>
+</dict>
+</plist>

@@ -1,17 +1,56 @@
-<header>
-  Darging Car
+<header id="m_hd">
+  <h1 class="lg">Daring Car</h1>
 </header>
 
 <hr />
 
-<article class="m_container">
-{{#each data}}
-  <a href="#">
-    <img src="/upload/representatives/{{thumbnail}}" alt="{{name}}" /><br />
-    [{{company}}] {{name}}<br />
-    {{min_price}} ~ {{max_price}}원<br />
-  </a>
+<section id="filter">
+  <select name="car_size" id="car_size">
+    <option value="전체">차종</option>
+    <option value="경차">경차</option>
+    <option value="소형">소형</option>
+    <option value="준중형">준중형</option>
+    <option value="중형">중형</option>
+    <option value="대형">대형</option>
+    <option value="SUV/RV">SUV/RV</option>
+    <option value="스포츠">스포츠</option>
+  </select>
+  <select name="company" id="company">
+    <!-- 디비에서 가져오기 -->
+    <option value="전체">제조사</option>
+    <option value="현대">현대</option>
+    <option value="기아">기아</option>
+  </select>
+  <a href="#">자세히</a>
+  <!--
+    가격, 연식, 주행거리 등등
+   -->
+</section>
 
-  <br />
-{{/each}}
+<hr />
+
+<article class="m_container">
+  <ul class="pr_list">
+  {{#each data}}
+  <li>
+    <a href="#" class="pr_list_tag">
+      <img src="/upload/representatives/{{thumbnail}}" alt="{{name}}" class="img_car" /><br />
+      <span class="info_model">[{{company}}] {{name}}</span>
+      <span class="info_price">{{min_price}} ~ {{max_price}}원</span>
+    </a>
+  </li>
+  {{/each}}
+  </ul>
+
 </article>
+
+<div id="addr">
+  <a href="#">전화요청</a>&nbsp;&nbsp;
+  <a href="#">카톡</a>&nbsp;&nbsp;
+  <a href="#">전화</a>
+</div>
+
+<!--
+  제품명과
+  최저 가격과 최고가격이 잘 나올 수 있도록 한다.
+ -->

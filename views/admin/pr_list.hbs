@@ -8,7 +8,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           홍보차 리스트
-          <a href="#" class="btn btn-success pull-right" data-toggle="modal" data-target="#carModifyModal">홍보차 등록</a>
+          <a href="#" class="btn btn-success pull-right" data-toggle="modal" data-target="#carCreateModal">홍보차 등록</a>
         </div>
         <div class="panel-body">
           <table class="table table-car-pr">
@@ -34,11 +34,13 @@
                 </td>
                 <td>
                   {{#if (isEquals status 0)}}
-                    <a href="/admin/pr/activate/{{id}}/{{status}}" class="btn btn-success">active</a>
+                    <a href="/admin/pr/activate/{{id}}/{{status}}/{{company_id}}" class="btn btn-success">active</a>
                   {{else}}
-                    <a href="/admin/pr/activate/{{id}}/{{status}}" class="btn btn-warning">in-active</a>
+                    <a href="/admin/pr/activate/{{id}}/{{status}}/{{company_id}}" class="btn btn-warning">in-active</a>
                   {{/if}}
-                  <a href="#" class="btn btn-danger">Modify</a>
+                  <a href="#" class="btn btn-danger btn_modify_item"
+                     data-toggle="modal" data-target="#carModifyModal"
+                     data-item-name="{{name}}" data-type-id="{{type_id}}" data-company-id="{{company_id}}" data-item-id="{{id}}">Modify</a>
                 </td>
               </tr>
             {{/each}}
@@ -50,38 +52,32 @@
   </div><!--/.row-->
 </div>	<!--/.main-->
 
-<!-- modal(register pr car ) -->
-<div class="modal fade" id="carModifyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <form action="/admin/pr/create/car" method="post" enctype="multipart/form-data">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="myModalLabel">홍보차 등록</h4>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label>Company</label>
-            <input class="form-control" name="company" placeholder="회사이름을 입력하세요." required autofocus />
-          </div>
-          <div class="form-group">
-            <label>Model</label>
-            <input class="form-control" name="name" placeholder="차량 모델명을 입력하세요." required />
-          </div>
-          <div class="form-group">
-            <label>Thumbnail</label>
-            <input type="file" name="upload" required multiple="multiple" />
-            <p class="help-block">*대표 이미지를 등록하세요. (권장사이즈: ?? 이미지형식: ??)</p>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- // modal -->
+
+{{>modals/create_prcar}}
+{{>modals/modify_prcar}}
+
+<script>
+  (function () {
+    var btn_modify_item = $('.btn_modify_item');
+    var item_name = $('.item_name');
+    var item_company = $('.item_company');
+    var item_type = $('.item_type');
+    var item_id = $('.item_id');
+
+    btn_modify_item.bind('click', function () {
+      var _self = $(this);
+      var type_id = _self.attr('data-type-id');
+      var company_id = _self.attr('data-company-id');
+      var name = _self.attr('data-item-name');
+      var id = _self.attr('data-item-id');
+
+      setTimeout(function () {
+        item_name.val(name);
+        item_company.val(company_id);
+        item_type.val(type_id);
+        item_id.val(id);
+      }, 100);
+    });
+
+  }());
+</script>

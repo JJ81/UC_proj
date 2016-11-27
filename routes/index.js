@@ -17,8 +17,14 @@ var SERVICE_NAME = '달링카, ';
 /**
  * client app index page
  */
-router.get('/', function(req, res, next) {
-	var stmt = 'select * from `car_pr` where `status`=true;';
+router.get('/', function(req, res) {
+	var stmt = "select " +
+	"c.name as `company`, ct.type, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail " +
+	"from `car_pr` as cp " +
+	"left join `company` as c " +
+	"on cp.company_id = c.id " +
+	"left join `car_type` as ct " +
+	"on cp.type_id = ct.id;";
 	connection.query(stmt, function (err, rows) {
 		if(err){
 			console.error('[ERR] ' + err);
