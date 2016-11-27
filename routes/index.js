@@ -18,13 +18,26 @@ var SERVICE_NAME = '달링카, ';
  * client app index page
  */
 router.get('/', function(req, res) {
+
+	// todo 필터 관련 데이터를 내려주어야 한다.
+	// 차종에 대한 데이터 (모든 것을 출력한다.)
+	// 제조사에 대한 데이터 (활성화된 것만 출력)
+
+	var com_id = req.query.com_id;
+	var type_id = req.query.type_id;
+
+	console.info('com : ' + com_id);
+	console.info('type : ' + type_id);
+
 	var stmt = "select " +
-	"c.name as `company`, ct.type, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail " +
+	"c.name as `company`, ct.type, cp.name, cp.max_price, cp.min_price, cp.hit_count, cp.thumbnail, ct.id as type_id, c.id as company_id " +
 	"from `car_pr` as cp " +
 	"left join `company` as c " +
 	"on cp.company_id = c.id " +
 	"left join `car_type` as ct " +
-	"on cp.type_id = ct.id;";
+	"on cp.type_id = ct.id " +
+	"where `c`.`id`='"+com_id+"'";
+
 	connection.query(stmt, function (err, rows) {
 		if(err){
 			console.error('[ERR] ' + err);
